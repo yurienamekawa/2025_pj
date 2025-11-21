@@ -1,16 +1,17 @@
-/* ページ全体の基本的な設定 */
+/* 画面の余白をなくし、キャンバスを中央に配置する設定 */
 body {
-    background-color: #f0f0f0; /* 背景を少し灰色に */
-    font-family: sans-serif;   /* 文字のフォントを指定 */
-    display: flex;             /* 要素を柔軟に配置する設定 */
-    flex-direction: column;    /* 要素を縦に並べる */
-    align-items: center;       /* 要素を中央揃えに */
-    margin: 0;
-    padding: 20px;
+  margin: 0;
+  padding: 0;
+  background-color: #222; /* 背景色：ダークグレー */
+  display: flex;
+  justify-content: center; /* 横方向の中央揃え */
+  align-items: center;     /* 縦方向の中央揃え */
+  height: 100vh;           /* 画面の高さいっぱいに広げる */
+  overflow: hidden;        /* スクロールバーを出さない */
 }
 
-/* p5.jsが生成するキャンバス用の設定 */
 canvas {
-    display: block; /* キャンバスの下にできる余分な隙間を消す */
-    border: 2px solid #333; /* キャンバスに黒い枠線をつける */
+  /* キャンバスに枠線をつけてわかりやすくする */
+  border: 2px solid #fff; 
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }

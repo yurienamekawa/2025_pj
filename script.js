@@ -1,51 +1,53 @@
 import {
-  FilesetResolver,
-  HandLandmarker
-} from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0";
+  FilesetResolver, //FilesetResolverは必要なリソースを取得するための仕組み
+  HandLandmarker //HandLandmarkerは手のランドマーク検出を行うクラス
+} from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0"; //MediaPipe Tasks Visionライブラリのインポート
 
 // ==========================================
-// ★ここに取得したAPIキーを貼り付けてください
-const API_KEY = "ここにAPIキーを貼り付けてください"; 
+// APIキー設定
+const API_KEY = "ここにGoogle CloudのAPIキーを入力してください"; 
 // ==========================================
 
 // --- 変数定義 ---
-let handLandmarker = undefined;
-let capture;
-let indexFingerTip = null;
+let handLandmarker = undefined; //手のランドマーク検出器のインスタンスを格納
+let capture; //カメラ映像キャプチャ用変数
+let indexFingerTip = null; //人差し指の先端座標
 
 // 軌跡データ
-let history = []; 
-const MAX_HISTORY = 60; 
-let cooldown = 0; 
+let history = []; // 人差し指の軌跡を保存する配列
+const MAX_HISTORY = 60; // 軌跡の最大保存数
+let cooldown = 0; // ジェスチャー認識のクールダウンタイム（ジェスチャーが連続して認識されるのを防ぐための待機時間）
 
 // 音声・AI関連
-let recognition;        
-let isListening = false; 
-let recognizedText = ""; 
+let recognition; // 音声認識オブジェクト      
+let isListening = false; // 音声認識中フラグ
+let recognizedText = ""; // 認識されたテキストの保存
 
-// ★変更: 花の管理用（リストにする）
-let flowers = []; // ここに生成された全ての花データを保存します
+// 花の管理用（リストにする）
+let flowers = []; // ここに生成された全ての花データを保存
 let currentGestureCenter = { x: 0, y: 0 }; // ジェスチャーをした場所の一時保存
 
 // --- 初期化 (Setup) ---
-window.setup = async function() {
-  createCanvas(windowWidth, windowHeight);
+window.setup = async function() { // p5.jsのsetup関数
+  createCanvas(windowWidth, windowHeight); // キャンバス作成
   
-  capture = createCapture(VIDEO);
-  capture.size(640, 480);
-  capture.hide();
+  capture = createCapture(VIDEO); // カメラ映像のキャプチャ開始
+  capture.size(640, 480); // カメラ解像度設定
+  capture.hide(); // デフォルトのビデオ要素を非表示にする
 
-  await createHandLandmarker();
-  setupSpeechRecognition();
+  await createHandLandmarker(); // MediaPipe HandLandmarkerの初期化
+  setupSpeechRecognition(); // 音声認識の初期化
 
   console.log("システム準備完了: たくさん花を咲かせましょう！");
 };
 
-window.windowResized = function() {
-  resizeCanvas(windowWidth, windowHeight);
+window.windowResized = function() { // ウィンドウリサイズ時の処理
+  resizeCanvas(windowWidth, windowHeight); // キャンバスサイズをウィンドウサイズに合わせて変更
 };
 
 // --- イージング関数 ---
+//アニメーションの動きを滑らかにするための数学的手法
+//easeOutBack：アニメーションの終わりに向かって速くなり、少し戻るような動きを作り出す
 function easeOutBack(t) {
   const c1 = 1.70158;
   const c3 = c1 + 1;
@@ -53,75 +55,72 @@ function easeOutBack(t) {
 }
 
 // --- 描画ループ (Draw) ---
-window.draw = function() {
-  background(0); // 黒背景
+window.draw = function() { // p5.jsのdraw関数
+  background('#A3D78A'); // 背景色設定
 
-  if (cooldown > 0) cooldown--;
+  if (cooldown > 0) cooldown--; // クールダウンタイムの減少
 
-  // --- 1. ★変更: 全ての花を描画 ---
-  // リストに入っている花をひとつずつ取り出して描画します
+  // リストに入っている花をひとつずつ取り出して描画
   for (let flower of flowers) {
     drawFlowerObject(flower);
   }
 
-  // --- 2. カメラと手の処理 ---
-  if (capture && capture.loadedmetadata) {
-    detectHands();
+  //ジェスチャー認識と描画
+  if (capture && capture.loadedmetadata) { // カメラ映像が利用可能な場合
+    detectHands(); // 手の検出
 
     // 軌跡更新
-    if (indexFingerTip) {
-      history.unshift({ x: indexFingerTip.x, y: indexFingerTip.y });
-      if (history.length > MAX_HISTORY) history.pop();
+    if (indexFingerTip) { // 人差し指の先端が検出された場合
+      history.unshift({ x: indexFingerTip.x, y: indexFingerTip.y }); // 先頭に追加
+      if (history.length > MAX_HISTORY) history.pop(); // 最大数を超えたら削除
     }
 
     // 指先（ピンクの光）
-    if (indexFingerTip) {
-      noStroke();
-      fill(255, 0, 255);
-      drawingContext.shadowBlur = 20;
-      drawingContext.shadowColor = 'magenta';
-      ellipse(indexFingerTip.x, indexFingerTip.y, 20, 20);
-      drawingContext.shadowBlur = 0;
+    if (indexFingerTip) { // 人差し指の先端が検出された場合
+      noStroke(); // 枠線なし
+      fill(255, 0, 255); // ピンク色
+      drawingContext.shadowBlur = 20; // ぼかし効果
+      drawingContext.shadowColor = 'magenta'; // 影の色
+      ellipse(indexFingerTip.x, indexFingerTip.y, 20, 20); // 円を描画
+      drawingContext.shadowBlur = 0; // ぼかし効果リセット
     }
 
     // ジェスチャー判定
-    if (cooldown === 0 && !isListening && checkCircleGesture()) {
-      console.log("円を検知！");
+    if (cooldown === 0 && !isListening && checkCircleGesture()) { // クールダウン中でなく、音声認識中でなく、円ジェスチャーが検出された場合
+      console.log("円を検知！"); // デバッグ用ログ
       
       // 今描いた円の中心を計算して一時保存
-      calculateCenter();
-      
-      startListening(); 
-      cooldown = 120;   
-      history = [];     
+      calculateCenter(); // ジェスチャーの中心座標を計算
+      startListening();  // 音声認識開始
+      cooldown = 120; // クールダウンタイム設定（約2秒）
+      history = []; // 軌跡リセット
     }
   }
 
-  // --- 3. UI ---
+    // UI描画
   drawUI();
 };
 
-// --- ★追加: 個別の花を描画する関数 ---
+// 個別の花を描画する関数
 function drawFlowerObject(flower) {
   // アニメーション計算
-  let elapsed = millis() - flower.spawnTime;
-  const duration = 1200; 
+  let elapsed = millis() - flower.spawnTime; // 花が生まれてからの経過時間
+  const duration = 1200; // アニメーションの総時間（ミリ秒）
   
-  // 登場アニメーション（0.0 -> 1.0）
-  let t = constrain(elapsed / duration, 0, 1);
-  let currentScale = easeOutBack(t);
+  let t = constrain(elapsed / duration, 0, 1); // 0から1の範囲に制限
+  let currentScale = easeOutBack(t); // イージング関数でスケール計算
   
-  // 光のエフェクト（登場時のみ）
+  // 光のエフェクト（オブジェクト登場時のみ）
   let glowAlpha = map(t, 0, 0.3, 255, 0, true);
 
   // 回転アニメーション（時間経過でずっと回り続ける）
   // flower.rotationOffset は個体差をつけるためのランダム値
   let rotation = (millis() * 0.0005) + flower.rotationOffset;
 
-  push();
-  translate(flower.x, flower.y);
-  scale(currentScale);
-  rotate(rotation);
+  push(); // 新しい描画状態を保存
+  translate(flower.x, flower.y); // 花の位置に移動
+  scale(currentScale); // スケール適用
+  rotate(rotation); // 回転適用
   
   noStroke();
 

@@ -3,11 +3,12 @@ import {
   HandLandmarker
 } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0";
 
-// -------------------------------------------------------------
-// ★ここに取得したAPIキーを貼り付けてください！
-const API_KEY = "APIキーをここに貼り付け"; 
-// -------------------------------------------------------------
+// ==========================================
+// ★ここに取得したAPIキーを貼り付けてください
+const API_KEY = "ここにAPIキーを貼り付けてください"; 
+// ==========================================
 
+// --- 変数定義 ---
 let handLandmarker = undefined;
 let capture;
 let indexFingerTip = null;
@@ -17,43 +18,58 @@ let history = [];
 const MAX_HISTORY = 60; 
 let cooldown = 0; 
 
-// 音声認識・AI関連
+// 音声・AI関連
 let recognition;        
 let isListening = false; 
 let recognizedText = ""; 
 
+// 花の生成関連（★追加）
+let flowerParams = null; // AIから届いた設計図
+let flowerPos = { x: 0, y: 0 }; // 花を咲かせる場所
+let flowerRotation = 0;  // 回転アニメーション用
+
+// --- 初期化 (Setup) ---
 window.setup = async function() {
   createCanvas(windowWidth, windowHeight);
   
+  // カメラ設定
   capture = createCapture(VIDEO);
   capture.size(640, 480);
   capture.hide();
 
+  // AIモデルと音声認識の準備
   await createHandLandmarker();
   setupSpeechRecognition();
 
-  console.log("システム準備完了: APIキー設定済み");
+  console.log("システム準備完了: 円を描いて話しかけてください");
 };
 
 window.windowResized = function() {
   resizeCanvas(windowWidth, windowHeight);
 };
 
+// --- 描画ループ (Draw) ---
 window.draw = function() {
   background(0); // 黒背景
 
   if (cooldown > 0) cooldown--;
 
+  // 1. 花の描画（データがある場合のみ）
+  if (flowerParams) {
+    drawGenerativeFlower(flowerPos.x, flowerPos.y, flowerParams);
+  }
+
+  // 2. カメラと手の処理
   if (capture && capture.loadedmetadata) {
     detectHands();
 
-    // 軌跡のデータ更新
+    // 指の軌跡更新
     if (indexFingerTip) {
       history.unshift({ x: indexFingerTip.x, y: indexFingerTip.y });
       if (history.length > MAX_HISTORY) history.pop();
     }
 
-    // 指先（ピンク）の描画
+    // 指先（ピンクの光）描画
     if (indexFingerTip) {
       noStroke();
       fill(255, 0, 255);
@@ -66,16 +82,88 @@ window.draw = function() {
     // ジェスチャー判定
     if (cooldown === 0 && !isListening && checkCircleGesture()) {
       console.log("円を検知！");
+      
+      // ★円を描いた場所（軌跡の中心）を計算して保存
+      calculateCenter();
+      
+      // 既存の花をリセット
+      flowerParams = null;
+      
       startListening(); 
       cooldown = 120;   
       history = [];     
     }
   }
 
+  // 3. UI情報の表示
   drawUI();
 };
 
-// UI描画
+// --- ★追加: ジェネレーティブ・フラワー描画関数 ---
+function drawGenerativeFlower(x, y, params) {
+  push();
+  translate(x, y);
+  
+  // ゆっくり回転させる
+  flowerRotation += 0.005;
+  rotate(flowerRotation);
+
+  noStroke();
+  
+  // 花びらの描画
+  const count = params.petal_count || 5;
+  const radius = params.petal_radius || 100;
+  const w = params.petal_width || 30;
+  const layers = params.layer_count || 1;
+  const col = color(params.color_hex || "#FFFFFF");
+
+  // 層（レイヤー）ごとの描画
+  for (let j = 0; j < layers; j++) {
+    // 内側の層ほど少し小さく、少し明るく
+    let scaleFactor = 1 - (j * 0.2);
+    fill(col);
+    
+    // 360度ぐるっと配置
+    for (let i = 0; i < count; i++) {
+      push();
+      rotate(TWO_PI * i / count);
+      
+      // 花びらの形（楕円を変形させて作る）
+      beginShape();
+      vertex(0, 0); // 中心
+      // ベジェ曲線で有機的なカーブを描く
+      bezierVertex(-w * scaleFactor, radius * 0.5 * scaleFactor, 
+                   -w * scaleFactor, radius * scaleFactor, 
+                   0, radius * scaleFactor); // 先端
+      bezierVertex(w * scaleFactor, radius * scaleFactor, 
+                   w * scaleFactor, radius * 0.5 * scaleFactor, 
+                   0, 0); // 中心に戻る
+      endShape();
+      pop();
+    }
+  }
+
+  // 中心の描画
+  fill(params.center_color_hex || "#FFFF00");
+  ellipse(0, 0, radius * 0.2, radius * 0.2);
+
+  pop();
+}
+
+// --- 補助関数: 軌跡の中心を計算 ---
+function calculateCenter() {
+  let sumX = 0, sumY = 0;
+  for (let p of history) {
+    sumX += p.x;
+    sumY += p.y;
+  }
+  flowerPos = {
+    x: sumX / history.length,
+    y: sumY / history.length
+  };
+}
+
+// --- UI描画 ---
 function drawUI() {
   textAlign(CENTER, CENTER);
   noStroke();
@@ -84,56 +172,43 @@ function drawUI() {
     fill(255, 100, 100);
     textSize(40);
     text("聞いています...", width / 2, height / 2);
-    
     let pulse = map(sin(millis() / 200), -1, 1, 10, 20);
-    ellipse(width / 2, height / 2 + 50, 20 + pulse, 20 + pulse);
+    ellipse(width / 2, height / 2 + 60, 20 + pulse, 20 + pulse);
   } 
-  else if (recognizedText !== "") {
+  else if (recognizedText !== "" && !flowerParams) {
+    // 生成待ちの間
     fill(255);
     textSize(32);
-    text(`認識: 「${recognizedText}」`, width / 2, height / 2);
-    
+    text(`「${recognizedText}」`, width / 2, height / 2);
     textSize(16);
-    fill(150);
-    text("AIがパラメータ生成中... (コンソールを見てね)", width / 2, height / 2 + 50);
+    fill(200);
+    text("AIが花を咲かせようとしています...", width / 2, height / 2 + 50);
   }
 }
 
-// --- 音声認識の設定 ---
+// --- 音声認識 ---
 function setupSpeechRecognition() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  
-  if (!SpeechRecognition) {
-    alert("このブラウザは音声認識に対応していません。");
-    return;
-  }
+  if (!SpeechRecognition) return;
 
   recognition = new SpeechRecognition();
   recognition.lang = 'ja-JP'; 
   recognition.interimResults = false; 
   recognition.maxAlternatives = 1;
 
-  recognition.onstart = () => {
-    isListening = true;
-    recognizedText = ""; 
-  };
-
-  recognition.onend = () => {
-    isListening = false;
-  };
+  recognition.onstart = () => { isListening = true; recognizedText = ""; };
+  recognition.onend = () => { isListening = false; };
 
   recognition.onresult = async (event) => {
     const transcript = event.results[0][0].transcript;
     recognizedText = transcript;
     console.log("認識結果:", transcript);
     
-    // ★ここでGeminiを呼び出します！
+    // AI呼び出し
     const params = await callGemini(transcript);
-    
     if (params) {
-        console.log("★★★ AIからの設計図(JSON)を受信しました！ ★★★");
-        console.log(params);
-        // Step 5でここに描画処理を追加します
+        console.log("🌸 パラメータ生成完了！描画を開始します");
+        flowerParams = params; // これが入ると draw() で花が描かれます
     }
   };
 }
@@ -144,37 +219,30 @@ function startListening() {
   }
 }
 
-// --- Gemini API呼び出し関数 (Gemini 2.0 Flash版) ---
+// --- Gemini API (2.0 Flash) ---
 async function callGemini(text) {
-  console.log("Geminiに問い合わせ中...", text);
-  
   if (!API_KEY || API_KEY.includes("ここに")) {
-      console.error("エラー: APIキーが設定されていません。");
+      console.error("APIキー未設定エラー");
       return null;
   }
 
-  // ★修正: あなたのリストにあった 'gemini-2.0-flash' を指定
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
   const prompt = `
-    あなたはジェネレーティブ・アートのパラメータ生成エンジンです。
-    ユーザーの入力: 「${text}」
-    この入力から連想される「架空の花」の視覚的特徴を決定し、以下のJSONフォーマットのみを出力してください。
-    Markdownのコードブロックや余計な説明は一切不要です。純粋なJSON文字列だけを返してください。
-
+    ユーザー入力: 「${text}」
+    この言葉から連想される「架空の花」の視覚的特徴をJSONで出力してください。
+    JSONのみ出力し、Markdown記法は含めないでください。
     {
-      "color_hex": "#RRGGBB形式のカラーコード (例: #FF00FF)",
-      "center_color_hex": "#RRGGBB形式の中心の色",
-      "petal_count": 3〜12の整数 (花びらの枚数),
-      "petal_radius": 50〜150の整数 (花びらの長さ),
-      "petal_width": 10〜50の整数 (花びらの太さ),
-      "layer_count": 1〜3の整数 (花びらの重なり数)
+      "color_hex": "#RRGGBB", 
+      "center_color_hex": "#RRGGBB",
+      "petal_count": 3〜20の整数,
+      "petal_radius": 50〜200の整数,
+      "petal_width": 10〜80の整数,
+      "layer_count": 1〜3の整数
     }
   `;
 
-  const data = {
-    contents: [{ parts: [{ text: prompt }] }]
-  };
+  const data = { contents: [{ parts: [{ text: prompt }] }] };
 
   try {
     const response = await fetch(url, {
@@ -182,39 +250,26 @@ async function callGemini(text) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
     });
-
-    if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Gemini API エラー詳細:", errorData);
-        return null;
-    }
+    if (!response.ok) return null;
 
     const json = await response.json();
-    console.log("AIからの返答(生データ):", json); 
-
     const resultText = json.candidates[0].content.parts[0].text;
-    const cleanJsonText = resultText.replace(/```json|```/g, "").trim();
-    
-    const params = JSON.parse(cleanJsonText);
-    
-    // ★成功の証としてコンソールに目立つように表示
-    console.log("%c🌸 JSON取得成功！ 🌸", "color: pink; font-size: 20px; background: black;");
-    console.log(params);
-
-    return params;
+    const cleanJson = resultText.replace(/```json|```/g, "").trim();
+    return JSON.parse(cleanJson);
 
   } catch (error) {
-    console.error("通信または解析エラー:", error);
+    console.error(error);
     return null;
   }
 }
 
-// --- MediaPipe & 円判定 ---
+// --- MediaPipe & Gesture ---
 function checkCircleGesture() {
   if (history.length < 30) return false;
   let start = history[0];
   let end = history[history.length - 1];
-  let distance = dist(start.x, start.y, end.x, end.y);
+  let distStartEnd = dist(start.x, start.y, end.x, end.y);
+
   let minX = width, maxX = 0, minY = height, maxY = 0;
   for(let p of history) {
     if (p.x < minX) minX = p.x;
@@ -222,10 +277,8 @@ function checkCircleGesture() {
     if (p.y < minY) minY = p.y;
     if (p.y > maxY) maxY = p.y;
   }
-  let boxWidth = maxX - minX;
-  let boxHeight = maxY - minY;
-
-  if (distance < 60 && boxWidth > 150 && boxHeight > 150) {
+  // 判定基準
+  if (distStartEnd < 60 && (maxX - minX) > 150 && (maxY - minY) > 150) {
     return true;
   }
   return false;
@@ -258,33 +311,3 @@ async function detectHands() {
     indexFingerTip = null;
   }
 }
-
-// --- 使えるモデルを調べる診断コード ---
-// script.jsの最後に貼り付けて保存してください
-(async function listModels() {
-  console.log("🔍 使えるモデルを検索中...");
-  const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${API_KEY}`;
-  
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
-    
-    if (response.ok) {
-      console.log("✅ 成功！あなたのキーで使えるモデル一覧はこちら:");
-      
-      // 使えるモデルの名前だけをリストアップして表示
-      const modelNames = data.models.map(m => m.name);
-      console.log(modelNames);
-      
-      // おすすめのモデルがあるかチェック
-      const recommended = modelNames.find(name => name.includes("gemini-1.5-flash"));
-      if (recommended) {
-        console.log(`💡 これを使ってください 👉 "${recommended.replace('models/', '')}"`);
-      }
-    } else {
-      console.error("❌ エラー:", data);
-    }
-  } catch (e) {
-    console.error("通信エラー:", e);
-  }
-})();

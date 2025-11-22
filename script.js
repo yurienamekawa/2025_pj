@@ -1,340 +1,350 @@
+import * as THREE from 'three';
+// ★追加: ポストプロセス（エフェクト）用のモジュール
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
 import {
-  FilesetResolver, //FilesetResolverは必要なリソースを取得するための仕組み
-  HandLandmarker //HandLandmarkerは手のランドマーク検出を行うクラス
-} from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0"; //MediaPipe Tasks Visionライブラリのインポート
+  FilesetResolver,
+  HandLandmarker
+} from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0";
 
 // ==========================================
-// APIキー設定
-const API_KEY = "ここにGoogle CloudのAPIキーを入力してください"; 
+// ★ここに取得したAPIキーを貼り付けてください
+const API_KEY = "ここにあなたのAPIキーを貼り付けてください"; 
 // ==========================================
 
-// --- 変数定義 ---
-let handLandmarker = undefined; //手のランドマーク検出器のインスタンスを格納
-let capture; //カメラ映像キャプチャ用変数
-let indexFingerTip = null; //人差し指の先端座標
+// --- グローバル変数 ---
+let renderer, scene, camera, composer; // composerを追加
+let handLandmarker, videoElement;
+let indexFingerTip = null; 
+let cursorMesh; 
 
-// 軌跡データ
-let history = []; // 人差し指の軌跡を保存する配列
-const MAX_HISTORY = 60; // 軌跡の最大保存数
-let cooldown = 0; // ジェスチャー認識のクールダウンタイム（ジェスチャーが連続して認識されるのを防ぐための待機時間）
+let history = [];
+const MAX_HISTORY = 60;
+let cooldown = 0;
+let recognition, isListening = false;
 
-// 音声・AI関連
-let recognition; // 音声認識オブジェクト      
-let isListening = false; // 音声認識中フラグ
-let recognizedText = ""; // 認識されたテキストの保存
+let flowers = []; 
+let historyPoint = null;
 
-// 花の管理用（リストにする）
-let flowers = []; // ここに生成された全ての花データを保存
-let currentGestureCenter = { x: 0, y: 0 }; // ジェスチャーをした場所の一時保存
+// UI
+const statusUI = document.getElementById('status-text');
+const resultUI = document.getElementById('result-text');
 
-// --- 初期化 (Setup) ---
-window.setup = async function() { // p5.jsのsetup関数
-  createCanvas(windowWidth, windowHeight); // キャンバス作成
+// --- 初期化 ---
+init();
+
+async function init() {
+  // 1. レンダラー設定
+  const canvas = document.createElement('canvas');
+  document.body.appendChild(canvas);
+
+  renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false }); // ポストプロセスを使うときはantialiasをfalseにするのが一般的
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  // ★重要: 発光表現のためにトーンマッピングを設定
+  renderer.toneMapping = THREE.ReinhardToneMapping;
+  renderer.toneMappingExposure = 1.5; // 全体の明るさ
+
+  // 2. シーン設定
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x000000); // 完全な黒背景
+
+  // 3. カメラ設定
+  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
+  camera.position.z = 5;
+
+  // ★追加: ライトは不要ですが、雰囲気用に弱い環境光だけ入れておきます
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
+  scene.add(ambientLight);
+
+  // 4. ★追加: ポストプロセス（ブルーム効果）の設定
+  const renderScene = new RenderPass(scene, camera);
+  // ブルームパラメータ: 解像度, 強さ, 半径, 閾値
+  const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 2.0, 0.4, 0.1);
+
+  composer = new EffectComposer(renderer);
+  composer.addPass(renderScene);
+  composer.addPass(bloomPass);
+
+  // 5. 指先カーソル（これもワイヤーフレームにする）
+  // セグメント数を減らしてデジタル感を出す (16, 8)
+  const cursorGeo = new THREE.SphereGeometry(0.05, 16, 8); 
+  const cursorMat = new THREE.MeshBasicMaterial({ 
+    color: 0xff00ff, 
+    wireframe: true // ★ワイヤーフレーム化
+  });
+  cursorMesh = new THREE.Mesh(cursorGeo, cursorMat);
+  scene.add(cursorMesh);
+  cursorMesh.visible = false;
+
+  // 6. MediaPipe & 音声認識準備
+  videoElement = document.getElementById('input-video');
+  statusUI.innerText = "SYSTEM INITIALIZING...";
+  await setupCamera();
+  await createHandLandmarker();
+  setupSpeechRecognition();
+
+  statusUI.innerText = "READY: DRAW A CIRCLE";
+
+  // 7. アニメーション開始
+  animate();
   
-  capture = createCapture(VIDEO); // カメラ映像のキャプチャ開始
-  capture.size(640, 480); // カメラ解像度設定
-  capture.hide(); // デフォルトのビデオ要素を非表示にする
-
-  await createHandLandmarker(); // MediaPipe HandLandmarkerの初期化
-  setupSpeechRecognition(); // 音声認識の初期化
-
-  console.log("システム準備完了: たくさん花を咲かせましょう！");
-};
-
-window.windowResized = function() { // ウィンドウリサイズ時の処理
-  resizeCanvas(windowWidth, windowHeight); // キャンバスサイズをウィンドウサイズに合わせて変更
-};
-
-// --- イージング関数 ---
-//アニメーションの動きを滑らかにするための数学的手法
-//easeOutBack：アニメーションの終わりに向かって速くなり、少し戻るような動きを作り出す
-function easeOutBack(t) {
-  const c1 = 1.70158;
-  const c3 = c1 + 1;
-  return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+  window.addEventListener('resize', onWindowResize);
 }
 
-// --- 描画ループ (Draw) ---
-window.draw = function() { // p5.jsのdraw関数
-  background('#A3D78A'); // 背景色設定
+// --- メインループ ---
+function animate() {
+  requestAnimationFrame(animate);
 
-  if (cooldown > 0) cooldown--; // クールダウンタイムの減少
+  if (cooldown > 0) cooldown--;
 
-  // リストに入っている花をひとつずつ取り出して描画
-  for (let flower of flowers) {
-    drawFlowerObject(flower);
+  detectHands(); 
+
+  // 指先カーソルの更新
+  if (indexFingerTip) {
+    cursorMesh.visible = true;
+    cursorMesh.position.lerp(indexFingerTip, 0.2);
+    // カーソルも少し回転させる
+    cursorMesh.rotation.y += 0.05;
+    cursorMesh.rotation.x += 0.02;
+  } else {
+    cursorMesh.visible = false;
   }
 
-  //ジェスチャー認識と描画
-  if (capture && capture.loadedmetadata) { // カメラ映像が利用可能な場合
-    detectHands(); // 手の検出
-
-    // 軌跡更新
-    if (indexFingerTip) { // 人差し指の先端が検出された場合
-      history.unshift({ x: indexFingerTip.x, y: indexFingerTip.y }); // 先頭に追加
-      if (history.length > MAX_HISTORY) history.pop(); // 最大数を超えたら削除
-    }
-
-    // 指先（ピンクの光）
-    if (indexFingerTip) { // 人差し指の先端が検出された場合
-      noStroke(); // 枠線なし
-      fill(255, 0, 255); // ピンク色
-      drawingContext.shadowBlur = 20; // ぼかし効果
-      drawingContext.shadowColor = 'magenta'; // 影の色
-      ellipse(indexFingerTip.x, indexFingerTip.y, 20, 20); // 円を描画
-      drawingContext.shadowBlur = 0; // ぼかし効果リセット
-    }
-
-    // ジェスチャー判定
-    if (cooldown === 0 && !isListening && checkCircleGesture()) { // クールダウン中でなく、音声認識中でなく、円ジェスチャーが検出された場合
-      console.log("円を検知！"); // デバッグ用ログ
-      
-      // 今描いた円の中心を計算して一時保存
-      calculateCenter(); // ジェスチャーの中心座標を計算
-      startListening();  // 音声認識開始
-      cooldown = 120; // クールダウンタイム設定（約2秒）
-      history = []; // 軌跡リセット
-    }
+  // ジェスチャー判定
+  if (cooldown === 0 && !isListening && checkCircleGesture()) {
+    startListening();
+    cooldown = 120;
+    history = [];
   }
 
-    // UI描画
-  drawUI();
-};
-
-// 個別の花を描画する関数
-function drawFlowerObject(flower) {
-  // アニメーション計算
-  let elapsed = millis() - flower.spawnTime; // 花が生まれてからの経過時間
-  const duration = 1200; // アニメーションの総時間（ミリ秒）
-  
-  let t = constrain(elapsed / duration, 0, 1); // 0から1の範囲に制限
-  let currentScale = easeOutBack(t); // イージング関数でスケール計算
-  
-  // 光のエフェクト（オブジェクト登場時のみ）
-  let glowAlpha = map(t, 0, 0.3, 255, 0, true);
-
-  // 回転アニメーション（時間経過でずっと回り続ける）
-  // flower.rotationOffset は個体差をつけるためのランダム値
-  let rotation = (millis() * 0.0005) + flower.rotationOffset;
-
-  push(); // 新しい描画状態を保存
-  translate(flower.x, flower.y); // 花の位置に移動
-  scale(currentScale); // スケール適用
-  rotate(rotation); // 回転適用
-  
-  noStroke();
-
-  // 光る演出（登場時）
-  if (glowAlpha > 1) {
-    fill(255, 255, 255, glowAlpha); 
-    drawingContext.shadowBlur = 60; 
-    drawingContext.shadowColor = 'white';
-    let glowSize = (flower.params.petal_radius || 100) * 3;
-    ellipse(0, 0, glowSize, glowSize);
-    drawingContext.shadowBlur = 0; 
-  }
-
-  // 花びらの描画
-  const params = flower.params;
-  const count = params.petal_count || 5;
-  const radius = params.petal_radius || 100;
-  const w = params.petal_width || 30;
-  const layers = params.layer_count || 1;
-  const col = color(params.color_hex || "#FFFFFF");
-
-  for (let j = 0; j < layers; j++) {
-    let scaleFactor = 1 - (j * 0.2);
-    fill(col);
-    for (let i = 0; i < count; i++) {
-      push();
-      rotate(TWO_PI * i / count);
-      beginShape();
-      vertex(0, 0); 
-      bezierVertex(-w * scaleFactor, radius * 0.5 * scaleFactor, 
-                   -w * scaleFactor, radius * scaleFactor, 
-                   0, radius * scaleFactor); 
-      bezierVertex(w * scaleFactor, radius * scaleFactor, 
-                   w * scaleFactor, radius * 0.5 * scaleFactor, 
-                   0, 0); 
-      endShape();
-      pop();
+  // 花のアニメーション
+  flowers.forEach(flower => {
+    // ゆっくり回転
+    flower.mesh.rotation.y += 0.005;
+    flower.mesh.rotation.z += 0.002; // 回転軸を少し変えてみる
+    
+    // 登場時の拡大アニメーション
+    if (flower.mesh.scale.x < 1.0) {
+      flower.mesh.scale.addScalar(0.03); // 少し速く出現
     }
-  }
+  });
 
-  // 中心
-  fill(params.center_color_hex || "#FFFF00");
-  ellipse(0, 0, radius * 0.2, radius * 0.2);
-
-  pop();
+  // ★変更: レンダラーではなく、コンポーザーを通じて描画する
+  composer.render();
 }
 
-// --- 補助関数 ---
-function calculateCenter() {
-  let sumX = 0, sumY = 0;
-  for (let p of history) {
-    sumX += p.x;
-    sumY += p.y;
+// --- 3Dフラワー生成ロジック (線画アート版) ---
+function create3DFlower(params, position) {
+  const group = new THREE.Group();
+
+  // 色とパラメータの準備
+  const colorHex = params.color_hex || "#00ffff"; // デフォルトをサイバーな水色に
+  const centerColorHex = params.center_color_hex || "#ffffff";
+  const petalCount = params.petal_count || 8;
+
+  // ★ワイヤーフレーム用のマテリアルを作成
+  // MeshBasicMaterial は光の影響を受けず、指定した色で発光するように見える
+  const wireframeMaterial = new THREE.MeshBasicMaterial({
+    color: new THREE.Color(colorHex),
+    wireframe: true,
+    // wireframeLinewidth: 2, // ※WebGLレンダラーでは線の太さは効かないことが多いです
+  });
+  
+  const centerMaterial = new THREE.MeshBasicMaterial({
+    color: new THREE.Color(centerColorHex),
+    wireframe: true
+  });
+
+  // 1. 花の中心（雄しべ）
+  // セグメントを減らしてカクカクさせる (12, 8)
+  const centerGeo = new THREE.SphereGeometry(0.2, 12, 8);
+  const centerMesh = new THREE.Mesh(centerGeo, centerMaterial);
+  group.add(centerMesh);
+
+  // 2. 花びら
+  // セグメントを減らしてデジタル感を出す (16, 12)
+  const petalGeo = new THREE.SphereGeometry(1, 16, 12);
+
+  for (let i = 0; i < petalCount; i++) {
+    const petal = new THREE.Mesh(petalGeo, wireframeMaterial);
+    
+    // 変形パラメータ
+    const width = (params.petal_width || 30) / 60.0;
+    const length = (params.petal_radius || 100) / 80.0;
+    
+    // x:幅, y:長さ, z:薄さ（線画なので薄さはあまり関係ないが、一応設定）
+    petal.scale.set(0.2 + width * 0.2, length, 0.1); 
+    petal.position.y = length * 0.4; 
+
+    // 角度調整用の親グループ
+    const pivot = new THREE.Group();
+    pivot.add(petal);
+    
+    // 放射状に配置
+    pivot.rotation.z = (i / petalCount) * Math.PI * 2;
+    pivot.rotation.x = 0.3; 
+    
+    group.add(pivot);
   }
-  // ジェスチャーの中心座標を更新
-  currentGestureCenter = {
-    x: sumX / history.length,
-    y: sumY / history.length
-  };
+
+  // 生成位置設定
+  let spawnPos = position ? position : new THREE.Vector3(0, 0, 0);
+  group.position.copy(spawnPos);
+  group.scale.set(0, 0, 0); 
+  
+  scene.add(group);
+  flowers.push({ mesh: group });
 }
 
-// --- UI描画 ---
-function drawUI() {
-  textAlign(CENTER, CENTER);
-  noStroke();
-
-  if (isListening) {
-    fill(255, 100, 100);
-    textSize(40);
-    text("聞いています...", width / 2, height / 2);
-    let pulse = map(sin(millis() / 200), -1, 1, 10, 20);
-    ellipse(width / 2, height / 2 + 60, 20 + pulse, 20 + pulse);
-  } 
-  else if (recognizedText !== "") {
-    // 生成待ちの表示（花が増えるので、邪魔にならないよう少し控えめに）
-    fill(255, 255, 255, 200);
-    textSize(24);
-    text(`生成中: 「${recognizedText}」`, width / 2, height - 50);
+// --- AI連携 (Gemini API) ---
+async function callGemini(text) {
+  if (!API_KEY || API_KEY.includes("ここに")) {
+      console.error("APIキー未設定"); return null;
   }
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+  
+  const prompt = `
+    ユーザー入力:「${text}」
+    この言葉から連想される「サイバーパンク風の花」の視覚的特徴をJSONで出力。
+    色はネオンカラーを意識して。
+    {
+      "color_hex": "#RRGGBB (ネオンカラー)",
+      "center_color_hex": "#RRGGBB (中心の発光色)",
+      "petal_count": 5〜20の整数,
+      "petal_radius": 50〜150の整数,
+      "petal_width": 10〜50の整数
+    }
+    MarkdownなしJSONのみ。
+  `;
+  
+  const data = { contents: [{ parts: [{ text: prompt }] }] };
+  try {
+    const response = await fetch(url, { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(data)});
+    if (!response.ok) return null;
+    const json = await response.json();
+    const txt = json.candidates[0].content.parts[0].text.replace(/```json|```/g, "").trim();
+    return JSON.parse(txt);
+  } catch (e) { console.error(e); return null; }
+}
+
+// --- MediaPipe (手認識) ---
+async function setupCamera() {
+  const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+  videoElement.srcObject = stream;
+  return new Promise(r => { videoElement.onloadedmetadata = r; });
+}
+async function createHandLandmarker() {
+  const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm");
+  handLandmarker = await HandLandmarker.createFromOptions(vision, {
+    baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task", delegate: "GPU" },
+    runningMode: "VIDEO", numHands: 1
+  });
+}
+
+async function detectHands() {
+  if (!handLandmarker || !videoElement) return;
+  const results = handLandmarker.detectForVideo(videoElement, performance.now());
+  
+  if (results.landmarks && results.landmarks.length > 0) {
+    const hand = results.landmarks[0];
+    const fingerTip = hand[8]; 
+    
+    historyPoint = { 
+      x: (1 - fingerTip.x) * window.innerWidth, 
+      y: fingerTip.y * window.innerHeight 
+    };
+    
+    const x = (1 - fingerTip.x) * 2 - 1; 
+    const y = -(fingerTip.y * 2 - 1);
+    const vec = new THREE.Vector3(x, y, 0.5);
+    vec.unproject(camera);
+    const dir = vec.sub(camera.position).normalize();
+    const distance = -camera.position.z / dir.z; 
+    const pos = camera.position.clone().add(dir.multiplyScalar(distance));
+    
+    indexFingerTip = pos;
+
+    if (historyPoint) {
+      history.unshift(historyPoint);
+      if (history.length > MAX_HISTORY) history.pop();
+    }
+  } else {
+    indexFingerTip = null;
+  }
+}
+
+// --- ジェスチャー判定 ---
+function checkCircleGesture() {
+  if (history.length < 30) return false;
+  let start = history[0]; let end = history[history.length - 1];
+  let dist = Math.sqrt(Math.pow(start.x - end.x, 2) + Math.pow(start.y - end.y, 2));
+  let minX = 10000, maxX = 0, minY = 10000, maxY = 0;
+  for(let p of history) { 
+    minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x); 
+    minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y); 
+  }
+  if (dist < 100 && (maxX - minX) > 100 && (maxY - minY) > 100) return true;
+  return false;
 }
 
 // --- 音声認識 ---
 function setupSpeechRecognition() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) return;
-
   recognition = new SpeechRecognition();
-  recognition.lang = 'ja-JP'; 
-  recognition.interimResults = false; 
-  recognition.maxAlternatives = 1;
+  recognition.lang = 'ja-JP'; recognition.interimResults = false;
 
-  recognition.onstart = () => { isListening = true; recognizedText = ""; };
-  recognition.onend = () => { isListening = false; };
+  recognition.onstart = () => { 
+    isListening = true; 
+    statusUI.innerText = "LISTENING..."; 
+    resultUI.innerText = ""; 
+    resultUI.style.color = "#0ff"; // 水色
+  };
+
+  recognition.onend = () => { 
+    isListening = false; 
+    if(statusUI.innerText.includes("LISTENING")) {
+        statusUI.innerText = "READY: DRAW A CIRCLE"; 
+    }
+  };
 
   recognition.onresult = async (event) => {
-    const transcript = event.results[0][0].transcript;
-    recognizedText = transcript;
-    console.log("認識結果:", transcript);
-    
-    // AI呼び出し
-    const params = await callGemini(transcript);
-    
-    if (params) {
-        console.log("🌸 新しい花を追加しました！");
-        
-        // ★変更: 新しい花オブジェクトを作成してリストに追加
-        flowers.push({
-            params: params,           // AIが決めた形や色
-            x: currentGestureCenter.x, // 円を描いた場所
-            y: currentGestureCenter.y,
-            spawnTime: millis(),      // 生まれた時間
-            rotationOffset: random(TWO_PI) // それぞれ違う角度で回り始める
-        });
-        
-        // 認識テキストをリセット
-        setTimeout(() => { recognizedText = ""; }, 3000);
+    const txt = event.results[0][0].transcript;
+    resultUI.innerText = `"${txt.toUpperCase()}"`;
+    statusUI.innerText = "GENERATING...";
+    resultUI.style.color = "#ff0"; // 黄色
+
+    try {
+      const params = await callGemini(txt);
+      if (params) {
+        let spawnPosition;
+        if (indexFingerTip) {
+            spawnPosition = indexFingerTip.clone();
+        } else {
+            spawnPosition = new THREE.Vector3(0, 0, 0);
+        }
+        create3DFlower(params, spawnPosition);
+        statusUI.innerText = "GENERATED";
+        resultUI.style.color = "#0f0"; // 緑色
+      } else {
+        statusUI.innerText = "ERROR: API FAIL";
+        resultUI.style.color = "#f00"; // 赤色
+      }
+    } catch (e) {
+      console.error(e);
+      statusUI.innerText = "ERROR: SYSTEM";
+      resultUI.style.color = "#f00";
     }
   };
 }
 
-function startListening() {
-  if (recognition && !isListening) {
-    try { recognition.start(); } catch (e) { console.error(e); }
-  }
-}
-
-// --- Gemini API (gemini-2.0-flash) ---
-async function callGemini(text) {
-  if (!API_KEY || API_KEY.includes("ここに")) {
-      console.error("APIキー未設定エラー");
-      return null;
-  }
-
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
-
-  const prompt = `
-    ユーザー入力: 「${text}」
-    この言葉から連想される「架空の花」の視覚的特徴をJSONで出力してください。
-    JSONのみ出力し、Markdown記法は含めないでください。
-    {
-      "color_hex": "#RRGGBB", 
-      "center_color_hex": "#RRGGBB",
-      "petal_count": 3〜20の整数,
-      "petal_radius": 30〜150の整数, 
-      "petal_width": 10〜80の整数,
-      "layer_count": 1〜3の整数
-    }
-  `;
-
-  const data = { contents: [{ parts: [{ text: prompt }] }] };
-
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    });
-    if (!response.ok) return null;
-
-    const json = await response.json();
-    const resultText = json.candidates[0].content.parts[0].text;
-    const cleanJson = resultText.replace(/```json|```/g, "").trim();
-    return JSON.parse(cleanJson);
-
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-}
-
-// --- MediaPipe & Gesture ---
-function checkCircleGesture() {
-  if (history.length < 30) return false;
-  let start = history[0];
-  let end = history[history.length - 1];
-  let distStartEnd = dist(start.x, start.y, end.x, end.y);
-
-  let minX = width, maxX = 0, minY = height, maxY = 0;
-  for(let p of history) {
-    if (p.x < minX) minX = p.x;
-    if (p.x > maxX) maxX = p.x;
-    if (p.y < minY) minY = p.y;
-    if (p.y > maxY) maxY = p.y;
-  }
-  if (distStartEnd < 60 && (maxX - minX) > 150 && (maxY - minY) > 150) {
-    return true;
-  }
-  return false;
-}
-
-async function createHandLandmarker() {
-  const vision = await FilesetResolver.forVisionTasks(
-    "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm"
-  );
-  handLandmarker = await HandLandmarker.createFromOptions(vision, {
-    baseOptions: {
-      modelAssetPath: "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",
-      delegate: "GPU"
-    },
-    runningMode: "VIDEO",
-    numHands: 1
-  });
-}
-
-async function detectHands() {
-  if (!handLandmarker || !capture.elt) return;
-  const results = handLandmarker.detectForVideo(capture.elt, millis());
-  if (results.landmarks && results.landmarks.length > 0) {
-    const hand = results.landmarks[0];
-    const fingerTip = hand[8];
-    const x = (1 - fingerTip.x) * width; 
-    const y = fingerTip.y * height;
-    indexFingerTip = { x, y };
-  } else {
-    indexFingerTip = null;
-  }
+function startListening() { if (recognition && !isListening) try { recognition.start(); } catch (e) { console.error(e); } }
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  composer.setSize(window.innerWidth, window.innerHeight); // composerもリサイズ
 }

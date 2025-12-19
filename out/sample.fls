@@ -1,0 +1,16 @@
+PWD /Users/yurienamekawa/PJ
+INPUT /usr/local/texlive/2025/texmf.cnf
+INPUT /usr/local/texlive/2025/texmf-dist/web2c/texmf.cnf
+INPUT /usr/local/texlive/2025/texmf-var/web2c/pdftex/latex.fmt
+INPUT /Users/yurienamekawa/PJ/sample.tex
+OUTPUT sample.log
+INPUT /usr/local/texlive/2025/texmf-dist/tex/platex/jsclasses/jsbook.cls
+INPUT /usr/local/texlive/2025/texmf-dist/tex/platex/jsclasses/jsbook.cls
+INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-dvipdfmx.def
+INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-dvipdfmx.def
+INPUT ./sample.aux
+INPUT ./sample.aux
+INPUT sample.aux
+OUTPUT sample.aux
+OUTPUT sample.dvi
+INPUT sample.aux

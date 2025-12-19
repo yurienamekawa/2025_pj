@@ -6,22 +6,22 @@ import { FilesetResolver, HandLandmarker } from "https://cdn.jsdelivr.net/npm/@m
 
 // ==========================================
 // ★ここに取得したAPIキーを貼り付けてください
-const API_KEY = "ここにAPIキーを貼り付けてください"; 
+const API_KEY = "AIzaSyCXHi8x_1hOWFPH22sQTVXicIfjV8J3FTo";
 // ==========================================
 
 // --- グローバル変数 ---
 let renderer, scene, camera, composer;
 let handLandmarker, videoElement;
-let indexFingerTip = null; 
-let cursorMesh; 
+let indexFingerTip = null;
+let cursorMesh;
 
 let history = [];
 const MAX_HISTORY = 60;
 let cooldown = 0;
 let recognition, isListening = false;
 
-let flowers = []; 
-let historyPoint = null; 
+let flowers = [];
+let historyPoint = null;
 
 const statusUI = document.getElementById('status-text');
 const resultUI = document.getElementById('result-text');
@@ -36,7 +36,7 @@ async function init() {
   renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false }); // PostProcess時はfalse推奨
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
-  
+
   // 2. シーン & カメラ
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x000000); // 完全な黒（ネオンが映える）
@@ -46,11 +46,11 @@ async function init() {
 
   // 3. ポストプロセス（発光エフェクト）
   const renderScene = new RenderPass(scene, camera);
-  
+
   // ブルーム設定 (解像度, 強さ, 半径, 閾値)
   // 強さ(1.5)と半径(0.5)で「ふわっとしたネオン感」を出します
   const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.5, 0.0);
-  
+
   composer = new EffectComposer(renderer);
   composer.addPass(renderScene);
   composer.addPass(bloomPass);
@@ -66,10 +66,10 @@ async function init() {
   videoElement = document.getElementById('input-video');
   statusUI.innerText = "CAMERA STARTING...";
   await setupCamera();
-  
+
   statusUI.innerText = "AI LOADING...";
   await createHandLandmarker();
-  
+
   setupSpeechRecognition();
 
   statusUI.innerText = "READY: DRAW A CIRCLE";
@@ -84,7 +84,7 @@ function animate() {
 
   if (cooldown > 0) cooldown--;
 
-  detectHands(); 
+  detectHands();
 
   if (indexFingerTip) {
     cursorMesh.visible = true;
@@ -108,10 +108,10 @@ function animate() {
 
     // 登場アニメーション
     flower.mesh.scale.lerp(new THREE.Vector3(flower.baseScale, flower.baseScale, flower.baseScale), 0.05);
-    
+
     // 感情による揺れ（喜びなら弾む）
     if (flower.params.emotion === "joy") {
-        flower.mesh.scale.multiplyScalar(1 + Math.sin(performance.now() * 0.005) * 0.005);
+      flower.mesh.scale.multiplyScalar(1 + Math.sin(performance.now() * 0.005) * 0.005);
     }
   });
 
@@ -123,11 +123,11 @@ function animate() {
 function createBotanicalFlower(params, position) {
   const group = new THREE.Group();
 
-  const petalCount = params.petal_count || 13; 
+  const petalCount = params.petal_count || 13;
   const color = new THREE.Color(params.color_hex);
   const centerColor = new THREE.Color(params.center_color_hex);
   const sharpness = params.sharpness || 0.0;
-  
+
   // マテリアル（ワイヤーフレームで発光させる）
   // MeshBasicMaterialはライトの影響を受けず、自ら発光しているように見えます
   const lineMaterial = new THREE.MeshBasicMaterial({
@@ -144,7 +144,7 @@ function createBotanicalFlower(params, position) {
 
   // 1. 花の中心（宝石のような多面体）
   // Icosahedron（正20面体）を使うとキラキラして可愛いです
-  const centerGeo = new THREE.IcosahedronGeometry(0.3, 1); 
+  const centerGeo = new THREE.IcosahedronGeometry(0.3, 1);
   const centerMesh = new THREE.Mesh(centerGeo, centerMaterial);
   group.add(centerMesh);
 
@@ -154,7 +154,7 @@ function createBotanicalFlower(params, position) {
   // widthSegments, heightSegments を小さくするのがコツ
   if (params.geometry_type === "cone" || params.emotion === "anger") {
     // 怒り/鋭い: 円錐
-    petalGeo = new THREE.ConeGeometry(0.2, 1.2, 5, 3, true); 
+    petalGeo = new THREE.ConeGeometry(0.2, 1.2, 5, 3, true);
     petalGeo.rotateX(Math.PI / 2);
     petalGeo.translate(0, 0, 0.6); // 原点を根元に
   } else {
@@ -170,14 +170,14 @@ function createBotanicalFlower(params, position) {
 
   for (let i = 0; i < petalCount; i++) {
     const petal = new THREE.Mesh(petalGeo, lineMaterial);
-    
+
     const angle = i * goldenAngle;
     // 半径を小さくして、中心にギュッと集める（一体感を出す）
-    const radius = 0.2 * Math.sqrt(i); 
-    
+    const radius = 0.2 * Math.sqrt(i);
+
     const x = radius * Math.cos(angle);
     const z = radius * Math.sin(angle);
-    
+
     // 花びらの配置
     // 親(pivot)を作って回転させることで、自然な開き方を表現
     const pivot = new THREE.Group();
@@ -185,16 +185,16 @@ function createBotanicalFlower(params, position) {
     pivot.add(petal); // 花びらを子にする
 
     // 1. Y軸回転（配置する方向）
-    pivot.rotation.y = -angle; 
-    
+    pivot.rotation.y = -angle;
+
     // 2. Z/X軸回転（花びらの開き具合）
     // 外側ほど大きく開く
-    const openAngle = (i / petalCount) * 0.5 + 0.3; 
+    const openAngle = (i / petalCount) * 0.5 + 0.3;
     pivot.rotation.x = openAngle;
 
     // 悲しい時は垂れ下がる
     if (params.emotion === "sadness") {
-        pivot.rotation.x += 1.5; 
+      pivot.rotation.x += 1.5;
     }
 
     // 個体差スケール（内側は小さく、外側は大きく）
@@ -205,27 +205,27 @@ function createBotanicalFlower(params, position) {
   }
 
   // 全体をカメラの方へ向ける
-  group.rotation.x = Math.PI * 0.2; 
+  group.rotation.x = Math.PI * 0.2;
   group.rotation.z = Math.PI * 0.1;
 
   group.position.copy(position);
-  group.scale.set(0, 0, 0); 
-  
+  group.scale.set(0, 0, 0);
+
   scene.add(group);
-  flowers.push({ 
-    mesh: group, 
-    params: params, 
-    baseScale: 1.0 
+  flowers.push({
+    mesh: group,
+    params: params,
+    baseScale: 1.0
   });
 }
 
 // --- AI連携 ---
 async function callGemini(text) {
   if (!API_KEY || API_KEY.includes("ここに")) {
-      console.error("API Error"); return null;
+    console.error("API Error"); return null;
   }
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
-  
+
   const prompt = `
     Input: "${text}"
     Analyze emotion and semantics.
@@ -239,10 +239,10 @@ async function callGemini(text) {
       "sharpness": 0.0-1.0
     }
   `;
-  
+
   const data = { contents: [{ parts: [{ text: prompt }] }] };
   try {
-    const response = await fetch(url, { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(data)});
+    const response = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
     if (!response.ok) return null;
     const json = await response.json();
     const txt = json.candidates[0].content.parts[0].text.replace(/```json|```/g, "").trim();
@@ -266,19 +266,19 @@ async function createHandLandmarker() {
 async function detectHands() {
   if (!handLandmarker || !videoElement) return;
   const results = handLandmarker.detectForVideo(videoElement, performance.now());
-  
+
   if (results.landmarks && results.landmarks.length > 0) {
     const hand = results.landmarks[0];
-    const fingerTip = hand[8]; 
-    
+    const fingerTip = hand[8];
+
     historyPoint = { x: (1 - fingerTip.x) * window.innerWidth, y: fingerTip.y * window.innerHeight };
-    
-    const x = (1 - fingerTip.x) * 2 - 1; 
+
+    const x = (1 - fingerTip.x) * 2 - 1;
     const y = -(fingerTip.y * 2 - 1);
     const vec = new THREE.Vector3(x, y, 0.5);
     vec.unproject(camera);
     const dir = vec.sub(camera.position).normalize();
-    const distance = -camera.position.z / dir.z; 
+    const distance = -camera.position.z / dir.z;
     const pos = camera.position.clone().add(dir.multiplyScalar(distance));
     indexFingerTip = pos;
 
@@ -294,7 +294,7 @@ function checkCircleGesture() {
   let start = history[0]; let end = history[history.length - 1];
   let dist = Math.sqrt(Math.pow(start.x - end.x, 2) + Math.pow(start.y - end.y, 2));
   let minX = 10000, maxX = 0, minY = 10000, maxY = 0;
-  for(let p of history) { minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x); minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y); }
+  for (let p of history) { minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x); minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y); }
   return (dist < 100 && (maxX - minX) > 100 && (maxY - minY) > 100);
 }
 
@@ -305,22 +305,22 @@ function setupSpeechRecognition() {
   recognition = new SpeechRecognition();
   recognition.lang = 'ja-JP'; recognition.interimResults = false;
 
-  recognition.onstart = () => { 
-    isListening = true; 
-    statusUI.innerText = "LISTENING..."; 
+  recognition.onstart = () => {
+    isListening = true;
+    statusUI.innerText = "LISTENING...";
     statusUI.style.color = "#0ff";
     resultUI.innerText = "";
   };
-  recognition.onend = () => { isListening = false; if(statusUI.innerText.includes("LISTENING")) { statusUI.innerText = "READY"; statusUI.style.color = "#888"; } };
-  
+  recognition.onend = () => { isListening = false; if (statusUI.innerText.includes("LISTENING")) { statusUI.innerText = "READY"; statusUI.style.color = "#888"; } };
+
   recognition.onresult = async (event) => {
     const txt = event.results[0][0].transcript;
     resultUI.innerText = txt;
     statusUI.innerText = "GENERATING...";
-    
+
     const params = await callGemini(txt);
     if (params) {
-      let spawnPos = indexFingerTip ? indexFingerTip.clone() : new THREE.Vector3(0,0,0);
+      let spawnPos = indexFingerTip ? indexFingerTip.clone() : new THREE.Vector3(0, 0, 0);
       createBotanicalFlower(params, spawnPos);
       statusUI.innerText = "GENERATED";
     }

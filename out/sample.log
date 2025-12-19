@@ -1,0 +1,112 @@
+This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.uptex) (TeX Live 2025) (preloaded format=uplatex 2025.12.18)  19 DEC 2025 08:57
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**sample.tex
+(./sample.tex
+pLaTeX2e <2023-02-14u04>+1, based on
+LaTeX2e <2025-11-01>
+L3 programming layer <2025-11-14>
+(/usr/local/texlive/2025/texmf-dist/tex/platex/jsclasses/jsbook.cls
+Document Class: jsbook 2025/04/27 jsclasses (okumura, texjporg)
+Class jsbook Info: Autodetected engine: upLaTeX on input line 222.
+\jsc@mpt=\dimen164
+\jsc@mmm=\dimen165
+\jsc@smallskipamount=\skip49
+LaTeX Info: Redefining \textmc on input line 516.
+LaTeX Info: Redefining \textgt on input line 518.
+\symmincho=\mathgroup4
+LaTeX Font Info:    Overwriting symbol font `mincho' in version `bold'
+(Font)                  JY2/mc/m/n --> JY2/gt/m/n on input line 580.
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 9.24683pt on input line 774.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 9.24683pt on input line 774.
+\fullwidth=\dimen166
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 7.39746pt on input line 935.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 7.39746pt on input line 935.
+\c@part=\count274
+\c@chapter=\count275
+\c@section=\count276
+\c@subsection=\count277
+\c@subsubsection=\count278
+\c@paragraph=\count279
+\c@subparagraph=\count280
+\c@figure=\count281
+\c@table=\count282
+\abovecaptionskip=\skip50
+\belowcaptionskip=\skip51
+\jsc@tocl@width=\dimen167
+\@lnumwidth=\dimen168
+\bibindent=\dimen169
+(/usr/local/texlive/2025/texmf-dist/tex/platex/jsclasses/jslogo.sty
+Package: jslogo 2019/07/25 okumura, texjporg
+LaTeX Info: Redefining \TeX on input line 82.
+LaTeX Info: Redefining \LaTeX on input line 135.
+LaTeX Info: Redefining \LaTeXe on input line 188.
+)
+\heisei=\count283
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-dvipdfmx.def
+File: l3backend-dvipdfmx.def 2025-10-09 L3 backend support: dvipdfmx
+\g__graphics_track_int=\count284
+\g__pdfannot_backend_int=\count285
+\g__pdfannot_backend_link_int=\count286
+) (./sample.aux)
+\openout1 = `sample.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 3.
+LaTeX Font Info:    ... okay on input line 3.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 3.
+LaTeX Font Info:    ... okay on input line 3.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 3.
+LaTeX Font Info:    ... okay on input line 3.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 3.
+LaTeX Font Info:    ... okay on input line 3.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 3.
+LaTeX Font Info:    ... okay on input line 3.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 3.
+LaTeX Font Info:    ... okay on input line 3.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 3.
+LaTeX Font Info:    ... okay on input line 3.
+LaTeX Font Info:    Checking defaults for JY2/mc/m/n on input line 3.
+LaTeX Font Info:    ... okay on input line 3.
+LaTeX Font Info:    Checking defaults for JT2/mc/m/n on input line 3.
+LaTeX Font Info:    ... okay on input line 3.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 7.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 7.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 6.47278pt on input line 7.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 4.62341pt on input line 7.
+LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <10> not available
+(Font)              Font shape `JT2/gt/m/n' tried instead on input line 7.
+LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
+(Font)              scaled to size 9.24683pt on input line 7.
+LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <10> not available
+(Font)              Font shape `JY2/gt/m/n' tried instead on input line 7.
+LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
+(Font)              scaled to size 9.24683pt on input line 7.
+ [1
+
+] (./sample.aux)
+ ***********
+pLaTeX2e <2023-02-14u04>+1, based on
+LaTeX2e <2025-11-01>
+L3 programming layer <2025-11-14>
+ ***********
+ ) 
+Here is how much of TeX's memory you used:
+ 693 strings out of 468182
+ 11209 string characters out of 5434878
+ 427575 words of memory out of 5000000
+ 29679 multiletter control sequences out of 15000+600000
+ 632186 words of font info for 68 fonts, out of 8000000 for 9000
+ 934 hyphenation exceptions out of 8191
+ 43i,9n,51p,147b,277s stack positions out of 10000i,1000n,20000p,200000b,200000s
+
+Output written on sample.dvi (1 page, 300 bytes).

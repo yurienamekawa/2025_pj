@@ -1,0 +1,570 @@
+This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.uptex) (TeX Live 2025) (preloaded format=uplatex 2025.12.19)  19 DEC 2025 14:58
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**esample.tex
+(./esample.tex
+pLaTeX2e <2023-02-14u04>+1, based on
+LaTeX2e <2025-11-01>
+L3 programming layer <2025-11-14>
+(./ipsj.cls
+Document Class: ipsj 2025/02/05 v4.1 IPSJ class
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/color.sty
+Package: color 2025/01/14 v1.3e Standard LaTeX Color (DPC)
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package color Info: Driver file: dvips.def on input line 149.
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-def/dvips.def
+File: dvips.def 2025/01/21 v3.2a Graphics/color driver for dvips
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/dvipsnam.def
+File: dvipsnam.def 2016/06/17 v3.0m Driver-dependent file (DPC,SPQR)
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/mathcolor.ltx))
+\c@@paper=\count274
+\h=\dimen164
+\JQ=\dimen165
+\Q=\dimen166
+\@Q=\dimen167
+\ChtE=\skip49
+\CdpE=\skip50
+\CwdE=\skip51
+\CvsE=\skip52
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 8.90053pt on input line 665.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 8.90053pt on input line 665.
+\normalbaselineskip=\skip53
+\c@volume=\count275
+\c@number=\count276
+\c@month=\count277
+\c@year=\count278
+\author@count=\count279
+\label@count=\count280
+\email@count=\count281
+\affiliate@count=\count282
+\offsetemail=\count283
+\paffiliate@count=\count284
+\shubetutitlesep=\skip54
+\JEhonbunsep=\skip55
+\Etitleauthorsep=\skip56
+\Eauthorreceivesep=\skip57
+\Ereceiveabstsep=\skip58
+\Eabstkeywordsep=\skip59
+\Jtitlejauthorsep=\skip60
+\Jauthorjreceivesep=\skip61
+\Jreceivejabstsep=\skip62
+\Jabstsepjkeyword=\skip63
+\Jkeywordetitle=\skip64
+\Jetitleeauthor=\skip65
+\Jeauthorereceivesep=\skip66
+\Jereceiveeabstsep=\skip67
+\Jeabstekeywordsep=\skip68
+\@abstractbox=\box70
+\@eabstractbox=\box71
+\@jkeywordbox=\box72
+\@ekeywordbox=\box73
+\@keywordbox=\box74
+\c@part=\count285
+\c@section=\count286
+\c@subsection=\count287
+\c@subsubsection=\count288
+\c@paragraph=\count289
+\c@subparagraph=\count290
+\@tempboxb=\box75
+\SECTwd=\box76
+\section@height=\skip69
+\@abovecapskip=\dimen168
+\@belowcapskip=\dimen169
+\c@figure=\count291
+\c@table=\count292
+\abovecaptionskip=\skip70
+\belowcaptionskip=\skip71
+\@tempboxb=\box77
+\capwidth=\dimen170
+\ecapwidth=\dimen171
+\bibindent=\dimen172
+\c@profile=\count293
+\mathindent=\dimen173
+\@dummyfigbox=\box78
+\twocolcapwidth=\dimen174
+\twocolecapwidth=\dimen175
+\@compare@result=\count294
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2024/12/31 v1.2e Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks18
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2024/08/06 v1.4g Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: dvips.def on input line 106.
+)
+\Gin@req@height=\dimen176
+\Gin@req@width=\dimen177
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/latexsym.sty
+Package: latexsym 1998/08/17 v2.2e Standard LaTeX package (lasy symbols)
+\symlasy=\mathgroup4
+LaTeX Font Info:    Overwriting symbol font `lasy' in version `bold'
+(Font)                  U/lasy/m/n --> U/lasy/b/n on input line 52.
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/txfonts/txfonts.sty
+Package: txfonts 2008/01/22 v3.2.1
+LaTeX Font Info:    Redeclaring symbol font `operators' on input line 21.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
+(Font)                  OT1/cmr/m/n --> OT1/txr/m/n on input line 21.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/txr/m/n on input line 21.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/txr/m/n --> OT1/txr/bx/n on input line 22.
+\symitalic=\mathgroup5
+LaTeX Font Info:    Overwriting symbol font `italic' in version `bold'
+(Font)                  OT1/txr/m/it --> OT1/txr/bx/it on input line 26.
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 29.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/cmr/bx/n --> OT1/txr/bx/n on input line 29.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/txr/bx/n on input line 29.
+LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 30.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/cmr/m/it --> OT1/txr/m/it on input line 30.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/cmr/bx/it --> OT1/txr/m/it on input line 30.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/txr/m/it --> OT1/txr/bx/it on input line 31.
+LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 40.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
+(Font)                  OT1/cmss/m/n --> OT1/txss/m/n on input line 40.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
+(Font)                  OT1/cmss/bx/n --> OT1/txss/m/n on input line 40.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
+(Font)                  OT1/txss/m/n --> OT1/txss/b/n on input line 41.
+LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 50.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
+(Font)                  OT1/cmtt/m/n --> OT1/txtt/m/n on input line 50.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
+(Font)                  OT1/cmtt/m/n --> OT1/txtt/m/n on input line 50.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
+(Font)                  OT1/txtt/m/n --> OT1/txtt/b/n on input line 51.
+LaTeX Font Info:    Redeclaring symbol font `letters' on input line 58.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
+(Font)                  OML/cmm/m/it --> OML/txmi/m/it on input line 58.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/cmm/b/it --> OML/txmi/m/it on input line 58.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/txmi/m/it --> OML/txmi/bx/it on input line 59.
+\symlettersA=\mathgroup6
+LaTeX Font Info:    Overwriting symbol font `lettersA' in version `bold'
+(Font)                  U/txmia/m/it --> U/txmia/bx/it on input line 67.
+LaTeX Font Info:    Redeclaring symbol font `symbols' on input line 77.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
+(Font)                  OMS/cmsy/m/n --> OMS/txsy/m/n on input line 77.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  OMS/cmsy/b/n --> OMS/txsy/m/n on input line 77.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  OMS/txsy/m/n --> OMS/txsy/bx/n on input line 78.
+\symAMSa=\mathgroup7
+LaTeX Font Info:    Overwriting symbol font `AMSa' in version `bold'
+(Font)                  U/txsya/m/n --> U/txsya/bx/n on input line 94.
+\symAMSb=\mathgroup8
+LaTeX Font Info:    Overwriting symbol font `AMSb' in version `bold'
+(Font)                  U/txsyb/m/n --> U/txsyb/bx/n on input line 103.
+\symsymbolsC=\mathgroup9
+LaTeX Font Info:    Overwriting symbol font `symbolsC' in version `bold'
+(Font)                  U/txsyc/m/n --> U/txsyc/bx/n on input line 113.
+LaTeX Font Info:    Redeclaring symbol font `largesymbols' on input line 120.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
+(Font)                  OMX/cmex/m/n --> OMX/txex/m/n on input line 120.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  OMX/cmex/m/n --> OMX/txex/m/n on input line 120.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  OMX/txex/m/n --> OMX/txex/bx/n on input line 121.
+\symlargesymbolsA=\mathgroup10
+LaTeX Font Info:    Overwriting symbol font `largesymbolsA' in version `bold'
+(Font)                  U/txexa/m/n --> U/txexa/bx/n on input line 129.
+LaTeX Encoding Info:    Redeclaring text symbol \L (encoding OT1) on input line
+ 160.
+LaTeX Encoding Info:    Redeclaring text symbol \l (encoding OT1) on input line
+ 161.
+LaTeX Font Info:    Redeclaring math symbol \mathsterling on input line 164.
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 591.
+LaTeX Info: Redefining \not on input line 1043.
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/txfonts/ot1txtt.fd
+File: ot1txtt.fd 2000/12/15 v3.1
+)
+LaTeX Font Info:    Trying to load font information for OT1+txr on input line 3
+1.
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/txfonts/ot1txr.fd
+File: ot1txr.fd 2000/12/15 v3.1
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-dvips.def
+File: l3backend-dvips.def 2025-10-09 L3 backend support: dvips
+\l__pdfannot_backend_content_box=\box79
+\l__pdfannot_backend_model_box=\box80
+\g__pdfannot_backend_int=\count295
+\g__pdfannot_backend_link_int=\count296
+\g__pdfannot_backend_link_sf_int=\count297
+)
+(./esample.aux)
+\openout1 = `esample.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/txmi/m/it on input line 31.
+LaTeX Font Info:    Trying to load font information for OML+txmi on input line 
+31.
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/txfonts/omltxmi.fd
+File: omltxmi.fd 2000/12/15 v3.1
+)
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for OMS/txsy/m/n on input line 31.
+LaTeX Font Info:    Trying to load font information for OMS+txsy on input line 
+31.
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/txfonts/omstxsy.fd
+File: omstxsy.fd 2000/12/15 v3.1
+)
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for OMX/txex/m/n on input line 31.
+LaTeX Font Info:    Trying to load font information for OMX+txex on input line 
+31.
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/txfonts/omxtxex.fd
+File: omxtxex.fd 2000/12/15 v3.1
+)
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for U/txexa/m/n on input line 31.
+LaTeX Font Info:    Trying to load font information for U+txexa on input line 3
+1.
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/txfonts/utxexa.fd
+File: utxexa.fd 2000/12/15 v3.1
+)
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for JY2/mc/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for JT2/mc/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 8.21474pt on input line 46.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 8.21474pt on input line 46.
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 46.
+LaTeX Font Info:    Font shape `JT2/mc/b/n' in size <8.5373> not available
+(Font)              Font shape `JT2/mc/bx/n' tried instead on input line 46.
+LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <8.5373> not available
+(Font)              Font shape `JT2/gt/m/n' tried instead on input line 46.
+LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
+(Font)              scaled to size 8.21474pt on input line 46.
+LaTeX Font Info:    Font shape `JY2/mc/b/n' in size <8.5373> not available
+(Font)              Font shape `JY2/mc/bx/n' tried instead on input line 46.
+LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <8.5373> not available
+(Font)              Font shape `JY2/gt/m/n' tried instead on input line 46.
+LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
+(Font)              scaled to size 8.21474pt on input line 46.
+LaTeX Font Info:    Font shape `OT1/txr/b/it' in size <8.5373> not available
+(Font)              Font shape `OT1/txr/bx/it' tried instead on input line 46.
+LaTeX Font Info:    Trying to load font information for OT1+txss on input line 
+46.
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/txfonts/ot1txss.fd
+File: ot1txss.fd 2000/12/15 v3.1
+)
+LaTeX Font Info:    Font shape `OT1/txss/b/it' in size <8.5373> not available
+(Font)              Font shape `OT1/txss/b/sl' tried instead on input line 46.
+LaTeX Font Info:    Font shape `OT1/txss/b/sl' will be
+(Font)              scaled to size 8.1104pt on input line 46.
+LaTeX Font Info:    Calculating math sizes for size <8.5373> on input line 49.
+LaTeX Font Info:    Trying to load font information for U+txmia on input line 4
+9.
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/txfonts/utxmia.fd
+File: utxmia.fd 2000/12/15 v3.1
+)
+LaTeX Font Info:    Trying to load font information for U+txsya on input line 4
+9.
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/txfonts/utxsya.fd
+File: utxsya.fd 2000/12/15 v3.1
+)
+LaTeX Font Info:    Trying to load font information for U+txsyb on input line 4
+9.
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/txfonts/utxsyb.fd
+File: utxsyb.fd 2000/12/15 v3.1
+)
+LaTeX Font Info:    Trying to load font information for U+txsyc on input line 4
+9.
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/txfonts/utxsyc.fd
+File: utxsyc.fd 2000/12/15 v3.1
+)
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 5.75029pt on input line 49.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 5.75029pt on input line 49.
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 55.
+LaTeX Font Info:    Font shape `JT2/mc/b/n' in size <12.80594> not available
+(Font)              Font shape `JT2/mc/bx/n' tried instead on input line 60.
+LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <12.80594> not available
+(Font)              Font shape `JT2/gt/m/n' tried instead on input line 60.
+LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
+(Font)              scaled to size 12.32211pt on input line 60.
+LaTeX Font Info:    Font shape `JY2/mc/b/n' in size <12.80594> not available
+(Font)              Font shape `JY2/mc/bx/n' tried instead on input line 60.
+LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <12.80594> not available
+(Font)              Font shape `JY2/gt/m/n' tried instead on input line 60.
+LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
+(Font)              scaled to size 12.32211pt on input line 60.
+LaTeX Font Info:    Font shape `OT1/txr/b/n' in size <12.80594> not available
+(Font)              Font shape `OT1/txr/bx/n' tried instead on input line 60.
+LaTeX Font Info:    Font shape `JT2/mc/b/n' in size <19.92035> not available
+(Font)              Font shape `JT2/mc/bx/n' tried instead on input line 60.
+LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <19.92035> not available
+(Font)              Font shape `JT2/gt/m/n' tried instead on input line 60.
+LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
+(Font)              scaled to size 19.16774pt on input line 60.
+LaTeX Font Info:    Font shape `JY2/mc/b/n' in size <19.92035> not available
+(Font)              Font shape `JY2/mc/bx/n' tried instead on input line 60.
+LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <19.92035> not available
+(Font)              Font shape `JY2/gt/m/n' tried instead on input line 60.
+LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
+(Font)              scaled to size 19.16774pt on input line 60.
+LaTeX Font Info:    Font shape `OT1/txr/b/n' in size <19.92035> not available
+(Font)              Font shape `OT1/txr/bx/n' tried instead on input line 60.
+LaTeX Font Info:    Calculating math sizes for size <9.25> on input line 60.
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/sc' undefined
+(Font)              No change on input line 60.
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 12.09258pt on input line 60.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 12.09258pt on input line 60.
+LaTeX Font Info:    Calculating math sizes for size <12.56738> on input line 60
+.
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 8.46475pt on input line 60.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 8.46475pt on input line 60.
+LaTeX Font Info:    Calculating math sizes for size <8.79712> on input line 60.
+
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 7.11327pt on input line 60.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 7.11327pt on input line 60.
+LaTeX Font Info:    Font shape `OT1/txss/m/n' will be
+(Font)              scaled to size 7.02292pt on input line 60.
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 7.53017pt on input line 60.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 7.53017pt on input line 60.
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 7.53018pt on input line 60.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 7.53018pt on input line 60.
+LaTeX Font Info:    Calculating math sizes for size <7.82585> on input line 60.
+
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 5.27109pt on input line 60.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 5.27109pt on input line 60.
+LaTeX Font Info:    Calculating math sizes for size <5.47806> on input line 60.
+
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 11.38124pt on input line 63.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 11.38124pt on input line 63.
+LaTeX Font Info:    Font shape `JT2/mc/b/n' in size <11.82813> not available
+(Font)              Font shape `JT2/mc/bx/n' tried instead on input line 63.
+LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <11.82813> not available
+(Font)              Font shape `JT2/gt/m/n' tried instead on input line 63.
+LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
+(Font)              scaled to size 11.38124pt on input line 63.
+LaTeX Font Info:    Font shape `JY2/mc/b/n' in size <11.82813> not available
+(Font)              Font shape `JY2/mc/bx/n' tried instead on input line 63.
+LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <11.82813> not available
+(Font)              Font shape `JY2/gt/m/n' tried instead on input line 63.
+LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
+(Font)              scaled to size 11.38124pt on input line 63.
+LaTeX Font Info:    Font shape `OT1/txr/b/n' in size <11.82813> not available
+(Font)              Font shape `OT1/txr/bx/n' tried instead on input line 63.
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 6.23032pt on input line 73.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 6.23032pt on input line 73.
+LaTeX Font Info:    Font shape `JT2/mc/b/n' in size <9.25> not available
+(Font)              Font shape `JT2/mc/bx/n' tried instead on input line 91.
+LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <9.25> not available
+(Font)              Font shape `JT2/gt/m/n' tried instead on input line 91.
+LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
+(Font)              scaled to size 8.90053pt on input line 91.
+LaTeX Font Info:    Font shape `JY2/mc/b/n' in size <9.25> not available
+(Font)              Font shape `JY2/mc/bx/n' tried instead on input line 91.
+LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <9.25> not available
+(Font)              Font shape `JY2/gt/m/n' tried instead on input line 91.
+LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
+(Font)              scaled to size 8.90053pt on input line 91.
+LaTeX Font Info:    Font shape `OT1/txr/b/n' in size <9.25> not available
+(Font)              Font shape `OT1/txr/bx/n' tried instead on input line 91.
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 8.21472pt on input line 96.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 8.21472pt on input line 96.
+
+Overfull \hbox (6.13971pt too wide) in paragraph at lines 97--98
+[][]\OT1/txtt/m/n/8.53728 http://www.ipsj.or.jp/journal/submit/style.html 
+ []
+
+
+Overfull \hbox (10.62177pt too wide) in paragraph at lines 147--149
+[][]\OT1/txtt/m/n/8.53728 http://www.ipsj.or.jp/english/jip/submit/manual/
+ []
+
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 151.
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 162.
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 8.8993pt on input line 163.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 8.8993pt on input line 163.
+LaTeX Font Info:    Font shape `OT1/txss/m/n' will be
+(Font)              scaled to size 8.78625pt on input line 163.
+LaTeX Font Info:    Font shape `JT2/mc/b/n' in size <9.24873> not available
+(Font)              Font shape `JT2/mc/bx/n' tried instead on input line 163.
+LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <9.24873> not available
+(Font)              Font shape `JT2/gt/m/n' tried instead on input line 163.
+LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
+(Font)              scaled to size 8.8993pt on input line 163.
+LaTeX Font Info:    Font shape `JY2/mc/b/n' in size <9.24873> not available
+(Font)              Font shape `JY2/mc/bx/n' tried instead on input line 163.
+LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <9.24873> not available
+(Font)              Font shape `JY2/gt/m/n' tried instead on input line 163.
+LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
+(Font)              scaled to size 8.8993pt on input line 163.
+LaTeX Font Info:    Font shape `OT1/txss/b/n' will be
+(Font)              scaled to size 8.78625pt on input line 163.
+LaTeX Font Info:    Font shape `OT1/txss/m/n' will be
+(Font)              scaled to size 7.43452pt on input line 163.
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 6.84561pt on input line 163.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 6.84561pt on input line 163.
+LaTeX Font Info:    Trying to load font information for TS1+txr on input line 1
+63.
+(/usr/local/texlive/2025/texmf-dist/tex/latex/txfonts/ts1txr.fd
+File: ts1txr.fd 2000/12/15 v3.1
+) [1
+
+
+]
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 164.
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 168.
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 186.
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 196.
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 196.
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 199.
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 204.
+ [2]
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 331.
+
+[3]
+LaTeX Font Info:    Kanji font shape `JY2/gt/m/it' undefined
+(Font)              No change on input line 462.
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 486.
+LaTeX Font Info:    Calculating math sizes for size <7.82584> on input line 490
+.
+LaTeX Font Info:    Font shape `JT2/mc/b/n' in size <7.82584> not available
+(Font)              Font shape `JT2/mc/bx/n' tried instead on input line 494.
+LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <7.82584> not available
+(Font)              Font shape `JT2/gt/m/n' tried instead on input line 494.
+LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
+(Font)              scaled to size 7.53017pt on input line 494.
+LaTeX Font Info:    Font shape `JY2/mc/b/n' in size <7.82584> not available
+(Font)              Font shape `JY2/mc/bx/n' tried instead on input line 494.
+LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <7.82584> not available
+(Font)              Font shape `JY2/gt/m/n' tried instead on input line 494.
+LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
+(Font)              scaled to size 7.53017pt on input line 494.
+LaTeX Font Info:    Font shape `OT1/txr/b/n' in size <7.82584> not available
+(Font)              Font shape `OT1/txr/bx/n' tried instead on input line 494.
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 534.
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 9.6222pt on input line 546.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 9.6222pt on input line 546.
+ [4] [5]
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 877.
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 884.
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 891.
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 898.
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 905.
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 931.
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 939.
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 948.
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 958.
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 965.
+LaTeX Font Info:    Kanji font shape `JY2/mc/m/it' undefined
+(Font)              No change on input line 989.
+ [6] [7]
+LaTeX Font Info:    Font shape `OT1/txr/b/n' in size <9.24873> not available
+(Font)              Font shape `OT1/txr/bx/n' tried instead on input line 1251.
+
+ [8] (./esample.aux)
+ ***********
+pLaTeX2e <2023-02-14u04>+1, based on
+LaTeX2e <2025-11-01>
+L3 programming layer <2025-11-14>
+ ***********
+ ) 
+Here is how much of TeX's memory you used:
+ 3335 strings out of 468182
+ 48177 string characters out of 5434878
+ 462957 words of memory out of 5000000
+ 32234 multiletter control sequences out of 15000+600000
+ 717701 words of font info for 344 fonts, out of 8000000 for 9000
+ 929 hyphenation exceptions out of 8191
+ 57i,11n,65p,235b,453s stack positions out of 10000i,1000n,20000p,200000b,200000s
+
+Output written on esample.dvi (8 pages, 61936 bytes).

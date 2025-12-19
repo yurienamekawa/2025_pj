@@ -1,0 +1,20 @@
+# Fdb version 4
+["dvipdf"] 1766055624.74954 "sample.dvi" "sample.pdf" "sample" 1766055624.74949 2
+  "sample.dvi" 1766055624.67905 216 05322a562b3c5d543e4c2704b5aadbc7 "latex"
+  (generated)
+  "sample.pdf"
+  (rewritten before read)
+["latex"] 1766055624.53352 "/Users/yurienamekawa/PJ/sample.tex" "sample.dvi" "sample" 1766055624.75767 2
+  "/Users/yurienamekawa/PJ/sample.tex" 1766054479.56096 91 ac3c56695949d2aaee8100c1d999dc1f ""
+  "/usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-dvipdfmx.def" 1761248321 30997 166d52717c8599ca9c4d165366d3edae ""
+  "/usr/local/texlive/2025/texmf-dist/tex/platex/jsclasses/jsbook.cls" 1746923072 64160 473a8b214c7fcea3433023babe212e65 ""
+  "/usr/local/texlive/2025/texmf-dist/web2c/texmf.cnf" 1749313668 42213 4e2ca030e8e2640502016e9e45868dcb ""
+  "/usr/local/texlive/2025/texmf-var/web2c/pdftex/latex.fmt" 1766053230 3635647 76a0864a5d76d533c4a5c7c0c35d1cab ""
+  "/usr/local/texlive/2025/texmf.cnf" 1741450484 577 418a7058ec8e006d8704f60ecd22c938 ""
+  "sample.aux" 1766055624.67874 32 3985256e7290058c681f74d7a3565a19 "latex"
+  "sample.tex" 1766054479.56096 91 ac3c56695949d2aaee8100c1d999dc1f ""
+  (generated)
+  "sample.aux"
+  "sample.dvi"
+  "sample.log"
+  (rewritten before read)

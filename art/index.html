@@ -1,25 +1,54 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Generative Neon Flowers</title>
   <style>
-    body { margin: 0; overflow: hidden; background-color: #000; }
-    #input-video { display: none; }
-    canvas { display: block; width: 100vw; height: 100vh; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #000;
+    }
+
+    #input-video {
+      display: none;
+    }
+
+    canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+    }
+
     #ui-container {
-      position: absolute; top: 50%; left: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
       transform: translate(-50%, -50%);
-      color: white; text-align: center;
-      font-family: sans-serif; pointer-events: none;
-      text-shadow: 0 0 10px rgba(0,0,0,1); /* 文字の影も強くしてネオンっぽく */
+      color: white;
+      text-align: center;
+      font-family: sans-serif;
+      pointer-events: none;
+      text-shadow: 0 0 10px rgba(0, 0, 0, 1);
+      /* 文字の影も強くしてネオンっぽく */
       width: 100%;
     }
-    #status-text { font-size: 2rem; margin-bottom: 10px; font-family: 'Courier New', monospace; }
-    #result-text { font-size: 1.5rem; color: #0ff; font-family: 'Courier New', monospace; }
+
+    #status-text {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      font-family: 'Courier New', monospace;
+    }
+
+    #result-text {
+      font-size: 1.5rem;
+      color: #0ff;
+      font-family: 'Courier New', monospace;
+    }
   </style>
-  
+
   <script type="importmap">
     {
       "imports": {
@@ -29,6 +58,7 @@
     }
   </script>
 </head>
+
 <body>
   <video id="input-video" autoplay playsinline></video>
   <div id="ui-container">
@@ -37,4 +67,5 @@
   </div>
   <script type="module" src="script.js"></script>
 </body>
+
 </html>
